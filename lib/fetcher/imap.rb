@@ -3,11 +3,11 @@ require File.dirname(__FILE__) + '/../vendor/plain_imap'
 
 module Fetcher
   class Imap < Base
-    
+
     PORT = 143
-    
+
     protected
-    
+
     # Additional Options:
     # * <tt>:authentication</tt> - authentication type to use, defaults to PLAIN
     # * <tt>:port</tt> - port to use (defaults to 143)
@@ -25,11 +25,11 @@ module Fetcher
       @error_folder = options.delete(:error_folder) || 'bogus'
       super(options)
     end
-    
+
     # Open connection and login to server
     def establish_connection
       timeout_call = (RUBY_VERSION < '1.9.0') ? "SystemTimer.timeout_after(15.seconds) do" : "Timeout::timeout(15) do"
-      
+
       eval("#{timeout_call}
               @connection = Net::IMAP.new(@server, @port, @ssl)
               if @use_login
@@ -39,7 +39,7 @@ module Fetcher
               end
             end")
     end
-    
+
     # Retrieve messages from server
     def get_messages
       @connection.select(@in_folder)
@@ -47,7 +47,7 @@ module Fetcher
         msg = @connection.uid_fetch(uid,'RFC822').first.attr['RFC822']
         begin
           process_message(msg)
-          add_to_processed_folder(uid) if @processed_folder
+          handle_successfully_processed_message(uid)
         rescue
           handle_bogus_message(msg)
         end
@@ -55,13 +55,13 @@ module Fetcher
         @connection.uid_store(uid, "+FLAGS", [:Seen, :Deleted])
       end
     end
-    
+
     # Store the message for inspection if the receiver errors
     def handle_bogus_message(message)
       create_mailbox(@error_folder)
       @connection.append(@error_folder, message)
     end
-    
+
     # Delete messages and log out
     def close_connection
       @connection.expunge
@@ -72,17 +72,19 @@ module Fetcher
         Rails.logger.info("Fetcher: Remote closed connection before I could disconnect.")
       end
     end
-        
-    def add_to_processed_folder(uid)
-      create_mailbox(@processed_folder)
-      @connection.uid_copy(uid, @processed_folder)
+
+    def handle_successfully_processed_message(uid)
+      if @processed_folder
+        create_mailbox(@processed_folder)
+        @connection.uid_copy(uid, @processed_folder)
+      end
     end
-    
+
     def create_mailbox(mailbox)
       unless @connection.list("", mailbox)
         @connection.create(mailbox)
       end
     end
-    
+
   end
 end
