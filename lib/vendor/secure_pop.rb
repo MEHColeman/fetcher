@@ -1,7 +1,7 @@
 require 'socket'
 require 'net/pop'
 require 'net/protocol'
-require 'openssl/ssl'
+require 'openssl'
 
 # Backport of ruby 1.9's POP3 SSL support
 class Net::POP3

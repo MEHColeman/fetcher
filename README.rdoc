@@ -82,7 +82,7 @@ Here is an example script to be with <tt>script/runner</tt> via cron:
 
 == Extending
 
-You can subclass <tt>Fetcher::Base</tt> or one of the protocol-specific classed to override the standard behavior.
+You can subclass <tt>Fetcher::Base</tt> or one of the protocol-specific classes to override the standard behavior.
 
 == Further documentation
 

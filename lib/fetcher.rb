@@ -20,3 +20,4 @@ end
 require_relative 'fetcher/base'
 require_relative 'fetcher/pop'
 require_relative 'fetcher/imap'
+require_relative 'fetcher/imap_tagged'
