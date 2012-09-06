@@ -50,19 +50,20 @@ class FactoryFetcherTest < Test::Unit::TestCase
   def setup
     @receiver = mock()
     @pop_fetcher = Fetcher.create(:type => :pop, :server => 'test.host',
-                               :username => 'name',
-                               :password => 'password',
-                               :receiver => @receiver)
+                                  :username => 'name',
+                                  :password => 'password',
+                                  :receiver => @receiver)
 
-  @imap_fetcher = Fetcher.create(:type => :imap, :server => 'test.host',
-                              :username => 'name',
-                              :password => 'password',
-                              :receiver => @receiver)
+    @imap_fetcher = Fetcher.create(:type => :imap, :server => 'test.host',
+                                   :username => 'name',
+                                   :password => 'password',
+                                   :receiver => @receiver)
   end
 
   def test_should_be_sublcass
     assert_equal Fetcher::Pop, @pop_fetcher.class
     assert_equal Fetcher::Imap, @imap_fetcher.class
+    assert_equal Fetcher::ImapTagged, @imap_fetcher.class
   end
 
   def test_should_require_type
@@ -70,5 +71,3 @@ class FactoryFetcherTest < Test::Unit::TestCase
   end
 
 end
-
-# Write tests for sub-classes
