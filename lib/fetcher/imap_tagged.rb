@@ -13,7 +13,7 @@ module Fetcher
     # * <tt>:error_folder:</tt> - the name of a mailbox where messages that cannot be processed (i.e., your receiver throws an exception) will be moved.  No default. The mailbox will be created if it does not exist.
     def initialize(options={})
       @processed_tag = options.delete(:processed_tag) || 'processed'
-      @error_tag = options.delete(:processed_tag) || 'bogus'
+      @error_tag = options.delete(:error_tag) || 'bogus'
       @error_folder = options.delete(:error_folder) || nil
       super(options)
     end
