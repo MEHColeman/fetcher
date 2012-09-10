@@ -21,7 +21,6 @@ module Fetcher
     # Retrieve messages from server
     def get_messages
       @connection.select(@in_folder)
-
       # select messages not tagged as bogus or processed
       @connection.uid_search(['NOT', 'KEYWORD', @processed_tag, 'NOT', 'KEYWORD', @error_tag]).each do |uid|
         msg = @connection.uid_fetch(uid,'RFC822').first.attr['RFC822']

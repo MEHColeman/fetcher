@@ -52,7 +52,7 @@ module Fetcher
           handle_bogus_message(msg)
         end
         # Mark message as deleted 
-        @connection.uid_store(uid, "+FLAGS", [:Seen, :Deleted])
+        #@connection.uid_store(uid, "+FLAGS", [:Seen, :Deleted])
       end
     end
 
