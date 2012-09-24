@@ -1,8 +1,9 @@
 (RUBY_VERSION < '1.9.0') ? require('system_timer') : require('timeout')
 require File.dirname(__FILE__) + '/../vendor/plain_imap'
-
+require 'pry'
+require 'pry-debugger'
 module Fetcher
-  class ImapTagged < Imap
+  class ImapPlay < Imap
 
     protected
 
@@ -19,6 +20,22 @@ module Fetcher
     end
 
     # Retrieve messages from server
+    def get_messages
+      @connection.select(@in_folder)
+      # select messages not tagged as bogus or processed
+      a = @connection.uid_search(['NOT', 'KEYWORD', @processed_tag, 'NOT', 'KEYWORD', @error_tag])
+      binding.pry
+ #     .each do |uid|
+ #       msg = @connection.uid_fetch(uid,'RFC822').first.attr['RFC822']
+ #       begin
+ #         process_message(msg)
+ #         handle_successfully_processed_message(uid)
+ #       rescue
+ #         handle_bogus_message(msg, uid)
+ #       end
+ #     end
+    end
+
     # Store the message for inspection if the receiver errors
     def handle_bogus_message(message, uid)
       # tag with @error_tag
@@ -37,6 +54,13 @@ module Fetcher
       if @processed_folder
         create_mailbox(@processed_folder)
         @connection.uid_copy(uid, @processed_folder)
+      end
+    end
+
+    def clear_tag(tag)
+      @connection.select(@in_folder)
+      @connection.uid_search(['KEYWORD', tag]).each do |uid|
+        @connection.uid_store(uid, "-FLAGS", [tag])
       end
     end
 

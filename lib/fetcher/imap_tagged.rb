@@ -14,7 +14,7 @@ module Fetcher
     def initialize(options={})
       @processed_tag = options.delete(:processed_tag) || 'processed'
       @error_tag = options.delete(:error_tag) || 'bogus'
-      @error_folder = options.delete(:error_folder) || nil
+      @error_folder = options.delete(:error_folder) || :no_folder
       super(options)
     end
 
@@ -38,7 +38,7 @@ module Fetcher
       # tag with @error_tag
       @connection.uid_store(uid, "+FLAGS", [@error_tag])
 
-      if @error_folder
+      unless @error_folder == :no_folder
         create_mailbox(@error_folder)
         @connection.append(@error_folder, message)
       end

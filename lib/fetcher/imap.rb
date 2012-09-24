@@ -22,7 +22,7 @@ module Fetcher
       @use_login = options.delete(:use_login)
       @in_folder = options.delete(:in_folder) || 'INBOX'
       @processed_folder = options.delete(:processed_folder)
-      @error_folder = options.delete(:error_folder) || 'bogus'
+      @error_folder ||= options.delete(:error_folder) || 'bogus'
       super(options)
     end
 
