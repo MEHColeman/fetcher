@@ -1,7 +1,5 @@
 (RUBY_VERSION < '1.9.0') ? require('system_timer') : require('timeout')
 require File.dirname(__FILE__) + '/../vendor/plain_imap'
-require 'pry'
-require 'pry-debugger'
 module Fetcher
   class ImapPlay < Imap
 
